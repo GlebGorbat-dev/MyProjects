@@ -1,0 +1,5 @@
+# Минимальные зависимости для оптимизированного приложения
+selenium>=4.0.0
+undetected-chromedriver>=3.0.0
+Pillow>=9.0.0
+pyinstaller>=5.0.0
