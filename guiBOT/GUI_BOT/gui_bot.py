@@ -6,7 +6,7 @@ import time
 import threading
 import webbrowser
 
-driver = None  # глобальный объект для контроля браузера
+driver = None  
 
 def resource_path(filename):
     if hasattr(sys, "_MEIPASS"):
@@ -14,14 +14,12 @@ def resource_path(filename):
     return os.path.join(os.path.abspath("."), filename)
 
 def run_video_bot(query):
-    """Запуск видео через системный браузер (легковесный вариант)"""
     try:
         query = query.strip()
         if not query:
             messagebox.showwarning("Пустой запрос", "Введите название видео")
             return
         
-        # Используем системный браузер вместо Selenium
         url = f"https://www.youtube.com/results?search_query={query.replace(' ', '+')}"
         webbrowser.open(url)
         messagebox.showinfo("Видео запущено", "Видео открыто в браузере")
@@ -31,7 +29,6 @@ def run_video_bot(query):
 def run_video_bot_selenium(query):
     """Запуск видео через Selenium (для случаев когда нужен автоматический поиск)"""
     try:
-        # Ленивая загрузка тяжелых библиотек
         from selenium.webdriver.common.by import By
         from selenium.webdriver.common.keys import Keys
         from selenium.webdriver.support.ui import WebDriverWait
@@ -46,16 +43,13 @@ def run_video_bot_selenium(query):
         options.add_argument("--disable-plugins")
         options.add_argument("--disable-images")
         options.add_argument("--log-level=3")
-        # Убираем headless режим для стабильной работы
-        # options.add_argument("--headless")
         
         driver = uc.Chrome(options=options)
-        wait = WebDriverWait(driver, 15)  # Увеличиваем время ожидания
+        wait = WebDriverWait(driver, 15)
         
         driver.get("https://www.youtube.com")
-        time.sleep(2)  # Увеличиваем время ожидания
+        time.sleep(2)  
         
-        # Ждем загрузки страницы
         wait.until(EC.presence_of_element_located((By.NAME, "search_query")))
         
         search_box = driver.find_element(By.NAME, "search_query")
@@ -63,21 +57,17 @@ def run_video_bot_selenium(query):
         search_box.send_keys(query)
         search_box.send_keys(Keys.RETURN)
         
-        # Ждем результатов поиска
         time.sleep(3)
         
-        # Ищем первый видео элемент
         try:
             video = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, "a#video-title")))
             video_url = video.get_attribute("href")
         except:
-            # Альтернативный селектор
             video = driver.find_element(By.CSS_SELECTOR, "a#video-title")
             video_url = video.get_attribute("href")
         
         driver.quit()
         
-        # Открываем видео в системном браузере
         if video_url:
             webbrowser.open(video_url)
             messagebox.showinfo("Видео запущено", "Видео найдено и открыто в браузере")
@@ -88,11 +78,9 @@ def run_video_bot_selenium(query):
         messagebox.showerror("Ошибка", f"Произошла ошибка:\n{str(e)}")
 
 def prepare_background(path):
-    """Упрощенная загрузка фона без OpenCV"""
     try:
         from PIL import Image, ImageTk
         img = Image.open(path)
-        # Уменьшаем размер изображения для экономии памяти
         img = img.resize((710, 444), Image.Resampling.LANCZOS)
         return ImageTk.PhotoImage(img)
     except Exception as e:
@@ -100,26 +88,21 @@ def prepare_background(path):
         return None
 
 def launch_gui():
-    """Оптимизированный GUI с минимальным потреблением ресурсов"""
     root = tk.Tk()
     root.title("YouTube Video Finder")
     root.geometry("400x200")
     root.resizable(False, False)
     
-    # Устанавливаем минимальный стиль без фона
     root.configure(bg='#2c2c2c')
     
-    # Главный фрейм
     main_frame = tk.Frame(root, bg='#2c2c2c')
     main_frame.pack(expand=True, fill='both', padx=20, pady=20)
     
-    # Заголовок
     title_label = tk.Label(main_frame, text="YouTube Video Finder", 
                           font=("Arial", 16, "bold"), 
                           bg='#2c2c2c', fg='white')
     title_label.pack(pady=(0, 10))
     
-    # Поле ввода
     entry_label = tk.Label(main_frame, text="Введите название видео:", 
                           font=("Arial", 10), 
                           bg='#2c2c2c', fg='white')
@@ -129,7 +112,6 @@ def launch_gui():
     entry.pack(pady=(0, 15))
     entry.focus()
     
-    # Кнопки
     button_frame = tk.Frame(main_frame, bg='#2c2c2c')
     button_frame.pack()
     
@@ -146,10 +128,8 @@ def launch_gui():
                                                            args=(entry.get(),), daemon=True).start())
     btn_selenium.pack(side=tk.LEFT)
     
-    # Обработка Enter в поле ввода
     entry.bind('<Return>', lambda e: run_video_bot(entry.get()))
     
-    # Обработка закрытия окна
     def on_closing():
         root.destroy()
         sys.exit(0)
