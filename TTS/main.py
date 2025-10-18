@@ -12,26 +12,22 @@ def generate_gtts(text, output_path="tts.wav", lang="en"):
     tts = gTTS(text=text, lang=lang, slow=False)
     tts.save("temp.mp3")
 
-    # Конвертируем в WAV (если нужно для дальнейшей обработки)
     sound = AudioSegment.from_mp3("temp.mp3")
     sound.export(output_path, format="wav")
     os.remove("temp.mp3")
 
 def gentle_vocode(input_path, output_path, room_size=0.1, high_shelf_db=3.0, pitch_shift_steps=0):
-    # Загружаем оригинал
     y, sr = librosa.load(input_path, sr=None)
 
-    # Лёгкий pitch shift (по умолчанию 0 = нет изменения)
     if pitch_shift_steps != 0:
         y = librosa.effects.pitch_shift(y, sr=sr, n_steps=pitch_shift_steps)
 
-    # Лёгкая реверберация: короткий импульс + затухание
-    impulse = np.exp(-np.linspace(0, 3, int(sr * room_size)))  # экспоненциальное затухание
-    impulse /= np.sum(impulse)  # нормализация
+    impulse = np.exp(-np.linspace(0, 3, int(sr * room_size)))
+    impulse /= np.sum(impulse)  
     y_reverb = scipy.signal.fftconvolve(y, impulse, mode='full')[:len(y)]
-    y_blend = 0.85 * y + 0.15 * y_reverb  # очень мягкий эффект помещения
+    y_blend = 0.85 * y + 0.15 * y_reverb 
 
-    # Фильтр для лёгкой эквализации (сделать звук чуть “теплее”)
+
     sos = scipy.signal.iirfilter(
         N=2,
         Wn=3000,
@@ -43,10 +39,8 @@ def gentle_vocode(input_path, output_path, room_size=0.1, high_shelf_db=3.0, pit
     )
     y_final = scipy.signal.sosfilt(sos, y_blend)
 
-    # Нормализация
     y_final /= np.max(np.abs(y_final) + 1e-6)
 
-    # Сохраняем
     sf.write(output_path, y_final, sr)
 
 def mix_with_music(voice_path, music_path, output_path, voice_level, music_level):
