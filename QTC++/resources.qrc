@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/icons">
+        <!-- Можно добавить иконки для macOS -->
+    </qresource>
+</RCC>

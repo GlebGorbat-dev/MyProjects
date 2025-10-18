@@ -1,0 +1,6 @@
+/Applications/CLion.app/Contents/bin/cmake/mac/aarch64/bin/cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_MAKE_PROGRAM=/Applications/CLion.app/Contents/bin/ninja/mac/aarch64/ninja -G Ninja -S /Users/glebgorbat/CLionProjects/omisLAB2 -B /Users/glebgorbat/CLionProjects/omisLAB2/cmake-build-debug
+-- Using Qt6 from fenicsx-env: /opt/miniconda3/envs/fenicsx-env/lib/cmake/Qt6
+-- Found Cups: /Library/Developer/CommandLineTools/SDKs/MacOSX13.3.sdk/usr/lib/libcups.tbd (found version "2.3.4")
+-- Configuring done (0.6s)
+-- Generating done (0.8s)
+-- Build files have been written to: /Users/glebgorbat/CLionProjects/omisLAB2/cmake-build-debug
