@@ -1,0 +1,5 @@
+/Users/glebgorbat/CLionProjects/omisLAB2/cmake-build-debug/CMakeFiles/omisLAB2.dir
+/Users/glebgorbat/CLionProjects/omisLAB2/cmake-build-debug/CMakeFiles/edit_cache.dir
+/Users/glebgorbat/CLionProjects/omisLAB2/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+/Users/glebgorbat/CLionProjects/omisLAB2/cmake-build-debug/CMakeFiles/omisLAB2_autogen_timestamp_deps.dir
+/Users/glebgorbat/CLionProjects/omisLAB2/cmake-build-debug/CMakeFiles/omisLAB2_autogen.dir
